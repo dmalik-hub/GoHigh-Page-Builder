@@ -12,7 +12,6 @@ export function deepClone( obj ) {
 
 /**
  * Find an element in the nested tree by id.
- * Returns the element object or null.
  */
 export function findElement( elements, id ) {
 	for ( const el of elements ) {
@@ -27,7 +26,6 @@ export function findElement( elements, id ) {
 
 /**
  * Remove an element from the tree (mutates array).
- * Returns the removed element or null.
  */
 export function removeElement( elements, id ) {
 	for ( let i = 0; i < elements.length; i++ ) {
@@ -43,28 +41,31 @@ export function removeElement( elements, id ) {
 }
 
 /**
- * Create a default section with one 100%-width column.
+ * Create a section with the given column widths (percentages).
+ * Default: single 100%-width column.
  */
-export function createDefaultSection() {
+export function createSectionWithColumns( columnWidths = [ 100 ] ) {
 	const sectionId = generateId();
-	const columnId  = generateId();
+	const columns   = columnWidths.map( width => ( {
+		id:       generateId(),
+		elType:   'column',
+		settings: { _column_size: width },
+		elements: [],
+	} ) );
 	return {
-		id: sectionId,
-		elType: 'section',
+		id:       sectionId,
+		elType:   'section',
 		settings: {
-			layout: 'boxed',
-			_column_size: 100,
+			layout:  'boxed',
 			padding: { top: '40', right: '0', bottom: '40', left: '0', unit: 'px', isLinked: false },
 		},
-		elements: [
-			{
-				id: columnId,
-				elType: 'column',
-				settings: { _column_size: 100 },
-				elements: [],
-			},
-		],
+		elements: columns,
 	};
+}
+
+/** Alias for backward compat */
+export function createDefaultSection() {
+	return createSectionWithColumns( [ 100 ] );
 }
 
 /**
@@ -72,25 +73,23 @@ export function createDefaultSection() {
  */
 export function createWidget( widgetType, settings = {} ) {
 	return {
-		id: generateId(),
-		elType: 'widget',
+		id:         generateId(),
+		elType:     'widget',
 		widgetType,
 		settings,
-		elements: [],
+		elements:   [],
 	};
 }
 
 /**
  * Evaluate control visibility conditions.
- * control.condition = { key: value } — shows if ALL match.
- * control.conditions = { relation: 'and'|'or', terms: [{name, operator, value}] }
  */
 export function isControlVisible( control, settings ) {
 	if ( control.condition && Object.keys( control.condition ).length ) {
 		for ( const [ key, expected ] of Object.entries( control.condition ) ) {
-			const isNot = key.endsWith( '!' );
+			const isNot   = key.endsWith( '!' );
 			const realKey = isNot ? key.slice( 0, -1 ) : key;
-			const actual = settings[ realKey ];
+			const actual  = settings[ realKey ];
 			if ( isNot && actual === expected ) return false;
 			if ( ! isNot && actual !== expected ) return false;
 		}
@@ -122,10 +121,16 @@ export function generateCSS( elementId, controls, settings, device = 'desktop' )
 		if ( value === undefined || value === '' || value === null ) continue;
 
 		for ( const [ selector, ruleTemplate ] of Object.entries( control.selectors ) ) {
-			const resolvedSelector = selector.replace( '{{WRAPPER}}', wrapper );
+			const resolvedSelector = selector.replace( /\{\{WRAPPER\}\}/g, wrapper );
 			const rule = parseRule( ruleTemplate, value );
 			if ( rule ) {
-				css += `${ resolvedSelector } { ${ rule } }`;
+				if ( device === 'tablet' ) {
+					css += `@media (max-width: 1024px) { ${ resolvedSelector } { ${ rule } } }`;
+				} else if ( device === 'mobile' ) {
+					css += `@media (max-width: 767px) { ${ resolvedSelector } { ${ rule } } }`;
+				} else {
+					css += `${ resolvedSelector } { ${ rule } }`;
+				}
 			}
 		}
 	}
@@ -134,23 +139,58 @@ export function generateCSS( elementId, controls, settings, device = 'desktop' )
 }
 
 function parseRule( template, value ) {
-	if ( typeof value === 'object' && value !== null && 'size' in value ) {
-		if ( value.size === '' ) return '';
-		return template
-			.replace( '{{SIZE}}', value.size )
-			.replace( '{{UNIT}}', value.unit || 'px' )
-			.replace( '{{VALUE}}', value.size + ( value.unit || 'px' ) );
+	// Typography object: { font_family, font_size: {size, unit}, font_weight, text_transform, ... }
+	if ( typeof value === 'object' && value !== null && 'font_family' in value ) {
+		const parts = [];
+		if ( value.font_family )              parts.push( `font-family: '${ value.font_family }', sans-serif` );
+		if ( value.font_size?.size )          parts.push( `font-size: ${ value.font_size.size }${ value.font_size.unit || 'px' }` );
+		if ( value.font_weight )              parts.push( `font-weight: ${ value.font_weight }` );
+		if ( value.text_transform )           parts.push( `text-transform: ${ value.text_transform }` );
+		if ( value.font_style )               parts.push( `font-style: ${ value.font_style }` );
+		if ( value.line_height?.size )        parts.push( `line-height: ${ value.line_height.size }${ value.line_height.unit || '' }` );
+		if ( value.letter_spacing?.size !== undefined ) parts.push( `letter-spacing: ${ value.letter_spacing.size }${ value.letter_spacing.unit || 'px' }` );
+		return parts.length ? parts.join( '; ' ) + ';' : '';
 	}
+
+	// Slider: { size, unit }
+	if ( typeof value === 'object' && value !== null && 'size' in value ) {
+		if ( value.size === '' || value.size === null ) return '';
+		return template
+			.replace( /\{\{SIZE\}\}/g, value.size )
+			.replace( /\{\{UNIT\}\}/g, value.unit || 'px' )
+			.replace( /\{\{VALUE\}\}/g, value.size + ( value.unit || 'px' ) );
+	}
+
+	// Dimensions: { top, right, bottom, left, unit }
 	if ( typeof value === 'object' && value !== null && 'top' in value ) {
 		const u = value.unit || 'px';
+		const t = ( value.top  || '0' ) + u;
+		const r = ( value.right  || '0' ) + u;
+		const b = ( value.bottom || '0' ) + u;
+		const l = ( value.left   || '0' ) + u;
 		return template
-			.replace( '{{TOP}}', value.top + u )
-			.replace( '{{RIGHT}}', value.right + u )
-			.replace( '{{BOTTOM}}', value.bottom + u )
-			.replace( '{{LEFT}}', value.left + u )
-			.replace( '{{UNIT}}', u );
+			.replace( /\{\{TOP\}\}/g, t )
+			.replace( /\{\{RIGHT\}\}/g, r )
+			.replace( /\{\{BOTTOM\}\}/g, b )
+			.replace( /\{\{LEFT\}\}/g, l )
+			.replace( /\{\{UNIT\}\}/g, u );
 	}
+
+	// Background object
+	if ( typeof value === 'object' && value !== null && 'background' in value ) {
+		if ( value.background === 'gradient' && value.gradient_from && value.gradient_to ) {
+			return template.replace( /\{\{VALUE\}\}/g,
+				`linear-gradient(${value.gradient_angle || 180}deg, ${value.gradient_from}, ${value.gradient_to})` );
+		}
+		if ( value.color ) {
+			return template.replace( /\{\{VALUE\}\}/g, value.color );
+		}
+		return '';
+	}
+
+	// Plain objects (url, media, etc.) — skip
 	if ( typeof value === 'object' ) return '';
+
 	if ( ! value ) return '';
 	return template.replace( /\{\{VALUE\}\}/g, value );
 }

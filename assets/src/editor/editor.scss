@@ -374,3 +374,123 @@ $toolbar-h:   52px;
 	width: 100%; height: 100%; border: none;
 	background: #fff;
 }
+
+// ── Layout picker ──────────────────────────────────────────────────────────────
+.ghpb-layout-picker { padding: 16px; }
+
+.ghpb-layout-hint {
+	font-size: 12px; color: $text-dim; margin: 0 0 14px;
+}
+
+.ghpb-layout-grid {
+	display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+
+.ghpb-layout-option {
+	background: $dark-3; border: 1px solid $border; border-radius: 8px;
+	cursor: pointer; padding: 10px 8px;
+	display: flex; flex-direction: column; align-items: center; gap: 8px;
+	color: $text-dim; transition: all .15s;
+
+	&:hover { border-color: $purple; background: $dark; }
+}
+
+.ghpb-layout-preview {
+	display: flex; gap: 3px; width: 100%; height: 26px;
+}
+
+.ghpb-layout-col {
+	background: $purple; border-radius: 2px; opacity: .5; min-width: 6px;
+}
+
+.ghpb-layout-label { font-size: 11px; color: $text-dim; }
+
+// ── Control helpers ────────────────────────────────────────────────────────────
+.ghpb-hidden { display: none !important; }
+
+.ghpb-control-sep { border-top: 1px solid $border; margin-top: 12px; padding-top: 12px; }
+
+.ghpb-url-opt {
+	display: flex; align-items: center; gap: 6px;
+	font-size: 11px; color: $text-dim; margin-top: 4px; cursor: pointer;
+	input { width: auto; cursor: pointer; }
+}
+
+// ── Typography control ─────────────────────────────────────────────────────────
+.ghpb-typo-row {
+	margin-bottom: 10px;
+	&:last-child { margin-bottom: 0; }
+}
+
+// ── Background control ─────────────────────────────────────────────────────────
+.ghpb-bg-type-btns { display: flex; gap: 4px; margin-bottom: 10px; }
+
+.ghpb-bg-type-btn {
+	flex: 1; padding: 7px; border: 1px solid $border;
+	background: $dark-3; color: $text-dim; cursor: pointer;
+	border-radius: 5px; transition: all .15s;
+	display: flex; align-items: center; justify-content: center;
+
+	&.active { background: $purple; border-color: $purple; color: #fff; }
+	.dashicons { font-size: 16px; width: 16px; height: 16px; }
+}
+
+.ghpb-bg-classic, .ghpb-bg-gradient { margin-top: 6px; }
+
+.ghpb-bg-grad-from, .ghpb-bg-grad-to { margin-bottom: 6px; }
+
+// ── Media preview empty ────────────────────────────────────────────────────────
+.ghpb-media-empty {
+	background: $dark-3; border: 1px dashed $border; border-radius: 5px;
+	margin-bottom: 8px; height: 80px; cursor: pointer;
+	display: flex; align-items: center; justify-content: center;
+	color: $text-dim;
+	.dashicons { font-size: 24px; width: 24px; height: 24px; }
+}
+
+// ── Repeater control ───────────────────────────────────────────────────────────
+.ghpb-repeater {
+	border: 1px solid $border; border-radius: 6px; overflow: hidden;
+}
+
+.ghpb-repeater-rows {}
+
+.ghpb-repeater-row {
+	border-bottom: 1px solid $border;
+	&:last-child { border-bottom: none; }
+}
+
+.ghpb-repeater-row-header {
+	display: flex; align-items: center; padding: 8px 12px;
+	cursor: pointer; background: $dark-2; gap: 6px;
+	&:hover { background: $dark-3; }
+}
+
+.ghpb-repeater-row-label { flex: 1; font-size: 12px; font-weight: 500; }
+
+.ghpb-repeater-row-actions { display: flex; gap: 2px; }
+
+.ghpb-repeater-row-action {
+	width: 22px; height: 22px; border: none; background: transparent;
+	color: $text-dim; cursor: pointer; border-radius: 3px;
+	display: flex; align-items: center; justify-content: center; padding: 0;
+	&:hover { background: $dark-3; color: $text; }
+	.dashicons { font-size: 13px; width: 13px; height: 13px; line-height: 13px; }
+}
+
+.ghpb-repeater-row-content {
+	padding: 12px; background: $dark; display: none;
+	&.open { display: block; }
+}
+
+.ghpb-repeater-add {
+	width: 100%; padding: 8px; background: transparent;
+	border: none; border-top: 1px solid $border;
+	color: $purple; cursor: pointer; font-size: 12px;
+	display: flex; align-items: center; justify-content: center; gap: 4px;
+	&:hover { background: $dark-3; }
+	.dashicons { font-size: 14px; width: 14px; height: 14px; line-height: 14px; }
+}
+
+// ── Rep field sub-controls ─────────────────────────────────────────────────────
+.ghpb-rep-field { margin-bottom: 8px; &:last-child { margin-bottom: 0; } }

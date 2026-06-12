@@ -3,7 +3,7 @@
  * Plugin Name: GoHigh Page Builder
  * Plugin URI:  https://gohigh.io/page-builder
  * Description: Standalone drag-and-drop page builder with Elementor Pro-level features. Zero external dependencies.
- * Version:     1.0.2
+ * Version:     1.0.3
  * Author:      GoHigh
  * Author URI:  https://gohigh.io
  * License:     GPL-2.0-or-later
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'GHPB_VERSION',     '1.0.2' );
+define( 'GHPB_VERSION',     '1.0.3' );
 define( 'GHPB_FILE',        __FILE__ );
 define( 'GHPB_PATH',        plugin_dir_path( __FILE__ ) );
 define( 'GHPB_URL',         plugin_dir_url( __FILE__ ) );

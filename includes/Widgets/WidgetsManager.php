@@ -4,7 +4,10 @@ namespace GoHigh\PageBuilder\Widgets;
 use GoHigh\PageBuilder\Widgets\Basic\{
 	HeadingWidget, TextEditorWidget, ImageWidget, ButtonWidget,
 	VideoWidget, IconWidget, DividerWidget, SpacerWidget,
-	HtmlWidget, ShortcodeWidget, GoogleMapsWidget, ImageBoxWidget
+	HtmlWidget, ShortcodeWidget, GoogleMapsWidget, ImageBoxWidget,
+	AccordionWidget, TabsWidget, ToggleWidget, CounterWidget,
+	CountdownWidget, ProgressBarWidget, TestimonialWidget, AlertWidget,
+	IconListWidget, SocialIconsWidget, StarRatingWidget, FlipBoxWidget
 };
 
 defined( 'ABSPATH' ) || exit;
@@ -19,6 +22,7 @@ class WidgetsManager {
 
 	private function register_widgets(): void {
 		$built_in = [
+			// Phase 1 – Basic
 			HeadingWidget::class,
 			TextEditorWidget::class,
 			ImageWidget::class,
@@ -31,6 +35,19 @@ class WidgetsManager {
 			ShortcodeWidget::class,
 			GoogleMapsWidget::class,
 			ImageBoxWidget::class,
+			// Phase 2 – General
+			AccordionWidget::class,
+			TabsWidget::class,
+			ToggleWidget::class,
+			CounterWidget::class,
+			CountdownWidget::class,
+			ProgressBarWidget::class,
+			TestimonialWidget::class,
+			AlertWidget::class,
+			IconListWidget::class,
+			SocialIconsWidget::class,
+			StarRatingWidget::class,
+			FlipBoxWidget::class,
 		];
 
 		foreach ( $built_in as $class ) {
