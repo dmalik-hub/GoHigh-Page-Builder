@@ -1,5 +1,6 @@
-vendor/
 node_modules/
 dist/*.map
+dist/css/*.map
+dist/js/*.map
 *.DS_Store
 .env
