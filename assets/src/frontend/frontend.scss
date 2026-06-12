@@ -1,0 +1,167 @@
+// ── GoHigh Page Builder — Frontend Styles ─────────────────────────────────────
+
+// Layout
+.ghpb-page-builder-content { width: 100%; }
+
+.ghpb-section {
+	position: relative;
+	width: 100%;
+}
+
+.ghpb-container {
+	max-width: 1140px;
+	margin: 0 auto;
+	padding: 0 20px;
+
+	&--full {
+		max-width: 100%;
+		padding: 0;
+	}
+}
+
+.ghpb-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+}
+
+// Columns
+.ghpb-column {
+	padding: 10px;
+}
+
+.ghpb-col-100 { width: 100%; }
+.ghpb-col-75  { width: 75%; }
+.ghpb-col-66  { width: 66.666%; }
+.ghpb-col-50  { width: 50%; }
+.ghpb-col-33  { width: 33.333%; }
+.ghpb-col-25  { width: 25%; }
+.ghpb-col-20  { width: 20%; }
+.ghpb-col-16  { width: 16.666%; }
+
+@media (max-width: 1024px) {
+	.ghpb-col-100,
+	.ghpb-col-75,
+	.ghpb-col-66,
+	.ghpb-col-50,
+	.ghpb-col-33,
+	.ghpb-col-25,
+	.ghpb-col-20,
+	.ghpb-col-16 { width: 50%; }
+}
+
+@media (max-width: 767px) {
+	.ghpb-col-100,
+	.ghpb-col-75,
+	.ghpb-col-66,
+	.ghpb-col-50,
+	.ghpb-col-33,
+	.ghpb-col-25,
+	.ghpb-col-20,
+	.ghpb-col-16 { width: 100%; }
+}
+
+.ghpb-column-wrap { height: 100%; }
+.ghpb-widget-wrap { height: 100%; }
+
+// Widget container
+.ghpb-widget { position: relative; }
+.ghpb-widget-container { position: relative; }
+
+// ── Widget Styles ──────────────────────────────────────────────────────────────
+
+// Heading
+.ghpb-heading { }
+.ghpb-heading-title { margin: 0; }
+
+// Text Editor
+.ghpb-text-editor { }
+.ghpb-text-editor p:last-child { margin-bottom: 0; }
+
+// Image
+.ghpb-image { }
+.ghpb-image-img { max-width: 100%; height: auto; display: block; }
+.ghpb-image-caption { font-size: 13px; color: #666; margin-top: 8px; text-align: center; }
+.ghpb-image-placeholder {
+	background: #f0f0f0; width: 100%; min-height: 200px;
+	display: flex; align-items: center; justify-content: center;
+	color: #aaa;
+	.dashicons { font-size: 48px; width: 48px; height: 48px; }
+}
+
+// Button
+.ghpb-widget-button { }
+.ghpb-button {
+	display: inline-flex; align-items: center; gap: 8px;
+	padding: 12px 28px; background: #6c63ff; color: #fff;
+	text-decoration: none; border-radius: 4px; font-size: 15px;
+	font-weight: 600; transition: background .2s;
+	border: 2px solid transparent;
+
+	&:hover { background: #574fd6; color: #fff; }
+	&-default { }
+	&-info    { background: #17a2b8; &:hover { background: #138496; } }
+	&-success { background: #28a745; &:hover { background: #218838; } }
+	&-warning { background: #ffc107; color: #212529; &:hover { background: #e0a800; } }
+	&-danger  { background: #dc3545; &:hover { background: #c82333; } }
+}
+.ghpb-button-icon { display: flex; align-items: center; }
+
+// Video
+.ghpb-video { }
+.ghpb-video-wrapper { position: relative; }
+.ghpb-video-placeholder {
+	background: #f0f0f0; padding: 40px; text-align: center; color: #aaa;
+	.dashicons { font-size: 48px; width: 48px; height: 48px; display: block; margin: 0 auto 12px; }
+}
+
+// Icon
+.ghpb-icon { }
+
+// Divider
+.ghpb-divider { }
+.ghpb-divider-separator { width: 100%; border: 0; border-top: 1px solid #a4afb7; }
+
+// Spacer
+.ghpb-spacer { }
+.ghpb-spacer-inner { }
+
+// HTML
+.ghpb-html { }
+
+// Shortcode
+.ghpb-shortcode { }
+.ghpb-shortcode-empty { padding: 20px; background: #f9f9f9; color: #aaa; font-size: 13px; text-align: center; }
+
+// Google Maps
+.ghpb-google-maps {
+	iframe { width: 100%; height: 400px; display: block; }
+}
+
+// Image Box
+.ghpb-image-box {
+	&-top    { text-align: center; }
+	&-left   { display: flex; gap: 20px; }
+	&-right  { display: flex; flex-direction: row-reverse; gap: 20px; }
+
+	&-img { max-width: 100%; height: auto; }
+	&-image { margin-bottom: 16px; }
+	&-title { margin: 0 0 12px; }
+	&-description { margin: 0; color: #555; }
+}
+
+// ── Animations ─────────────────────────────────────────────────────────────────
+[data-animation] {
+	opacity: 0;
+	transition: opacity .6s ease, transform .6s ease;
+}
+
+.ghpb-animated { opacity: 1 !important; transform: none !important; }
+
+[data-animation="fadeIn"] { }
+[data-animation="fadeInUp"]    { transform: translateY(30px); }
+[data-animation="fadeInDown"]  { transform: translateY(-30px); }
+[data-animation="fadeInLeft"]  { transform: translateX(-30px); }
+[data-animation="fadeInRight"] { transform: translateX(30px); }
+[data-animation="zoomIn"]      { transform: scale(.8); }
+[data-animation="slideInUp"]   { transform: translateY(40px); }

@@ -1,0 +1,17 @@
+{
+    "name": "gohigh/page-builder",
+    "description": "Standalone WordPress page builder plugin",
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "GoHigh\\PageBuilder\\": "includes/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

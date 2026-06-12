@@ -1,0 +1,376 @@
+// ── Variables ────────────────────────────────────────────────────────────────
+$purple:      #6c63ff;
+$purple-dark: #574fd6;
+$purple-light:rgba(108,99,255,.1);
+$dark:        #1e1e2e;
+$dark-2:      #2a2a3e;
+$dark-3:      #34344e;
+$text:        #cdd6f4;
+$text-dim:    #8890b0;
+$border:      rgba(255,255,255,.08);
+$panel-w:     300px;
+$toolbar-h:   52px;
+
+// ── Reset ────────────────────────────────────────────────────────────────────
+.ghpb-editor-page * { box-sizing: border-box; }
+
+// ── Editor Layout ─────────────────────────────────────────────────────────────
+#ghpb-editor {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	background: $dark;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	font-size: 13px;
+	color: $text;
+}
+
+// ── Toolbar ───────────────────────────────────────────────────────────────────
+.ghpb-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: $toolbar-h;
+	background: $dark;
+	border-bottom: 1px solid $border;
+	padding: 0 12px;
+	flex-shrink: 0;
+	z-index: 100;
+
+	&-left, &-right { display: flex; align-items: center; gap: 4px; }
+	&-center { display: flex; align-items: center; }
+
+	&-logo {
+		.ghpb-logo-text {
+			font-size: 16px;
+			font-weight: 700;
+			color: $purple;
+			letter-spacing: -.5px;
+			padding: 0 8px;
+		}
+	}
+
+	&-btn {
+		display: flex; align-items: center; justify-content: center;
+		width: 34px; height: 34px;
+		border: none; background: transparent;
+		color: $text-dim; cursor: pointer; border-radius: 6px;
+		transition: background .15s, color .15s;
+
+		&:hover:not(:disabled) { background: $dark-3; color: $text; }
+		&:disabled { opacity: .35; cursor: default; }
+
+		.dashicons { font-size: 18px; width: 18px; height: 18px; }
+	}
+}
+
+.ghpb-save-btn {
+	width: auto !important;
+	padding: 0 16px;
+	background: $purple !important;
+	color: #fff !important;
+	border-radius: 6px;
+	font-size: 13px;
+	font-weight: 600;
+
+	&:hover { background: $purple-dark !important; }
+
+	span { pointer-events: none; }
+}
+
+// Responsive switcher
+.ghpb-responsive-switcher {
+	display: flex; gap: 2px; background: $dark-2;
+	border-radius: 8px; padding: 3px;
+}
+.ghpb-responsive-btn {
+	display: flex; align-items: center; justify-content: center;
+	width: 32px; height: 28px; border: none;
+	background: transparent; color: $text-dim; cursor: pointer;
+	border-radius: 6px; transition: all .15s;
+
+	&.active { background: $purple; color: #fff; }
+	&:not(.active):hover { color: $text; }
+	.dashicons { font-size: 16px; width: 16px; height: 16px; }
+}
+
+// ── Editor Main Area ──────────────────────────────────────────────────────────
+.ghpb-editor-main {
+	display: flex;
+	flex: 1;
+	overflow: hidden;
+}
+
+// ── Panel ─────────────────────────────────────────────────────────────────────
+.ghpb-panel {
+	width: $panel-w;
+	background: $dark-2;
+	border-right: 1px solid $border;
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+	overflow: hidden;
+	transition: width .25s;
+
+	&.ghpb-panel-collapsed { width: 0; }
+
+	&-inner { display: flex; flex-direction: column; height: 100%; width: $panel-w; }
+
+	&-header {
+		padding: 12px 16px;
+		border-bottom: 1px solid $border;
+		display: flex; align-items: center; gap: 8px;
+	}
+
+	&-header-kit { display: flex; align-items: center; gap: 8px; flex: 1; }
+
+	&-title { font-weight: 600; font-size: 14px; }
+
+	&-back {
+		display: flex; align-items: center; justify-content: center;
+		width: 28px; height: 28px; border: none;
+		background: transparent; color: $text-dim; cursor: pointer;
+		border-radius: 4px; transition: all .15s;
+		&:hover { background: $dark-3; color: $text; }
+		.dashicons { font-size: 16px; width: 16px; height: 16px; }
+	}
+
+	&-content { flex: 1; overflow-y: auto; overflow-x: hidden; }
+}
+
+// ── Elements Panel ────────────────────────────────────────────────────────────
+.ghpb-elements-panel { padding: 12px; }
+
+.ghpb-elements-search {
+	margin-bottom: 12px;
+	input {
+		width: 100%; padding: 8px 12px;
+		background: $dark-3; border: 1px solid $border;
+		border-radius: 6px; color: $text;
+		font-size: 13px; outline: none;
+		&::placeholder { color: $text-dim; }
+		&:focus { border-color: $purple; }
+	}
+}
+
+.ghpb-add-section-row {
+	margin-bottom: 12px;
+}
+
+.ghpb-add-section-btn-panel {
+	width: 100%; padding: 8px 12px;
+	background: $purple-light; border: 1px dashed rgba($purple,.4);
+	border-radius: 6px; color: $purple; cursor: pointer;
+	font-size: 13px; display: flex; align-items: center; gap: 6px;
+	justify-content: center; transition: background .15s;
+	&:hover { background: rgba($purple,.2); }
+}
+
+.ghpb-widget-category { margin-bottom: 16px; }
+
+.ghpb-category-title {
+	font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+	color: $text-dim; margin-bottom: 6px; padding: 0 4px;
+}
+
+.ghpb-category-items {
+	display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+}
+
+.ghpb-widget-item {
+	display: flex; flex-direction: column; align-items: center;
+	gap: 6px; padding: 10px 6px;
+	background: $dark-3; border: 1px solid $border;
+	border-radius: 8px; cursor: grab; text-align: center;
+	transition: all .15s;
+
+	&:hover { background: $dark; border-color: $purple; color: $purple; }
+	&.ghpb-dragging { opacity: .5; }
+
+	.dashicons { font-size: 22px; width: 22px; height: 22px; }
+
+	&-title { font-size: 11px; color: $text-dim; }
+}
+
+// ── Edit Panel ────────────────────────────────────────────────────────────────
+.ghpb-edit-panel { display: flex; flex-direction: column; height: 100%; }
+
+.ghpb-panel-tabs {
+	display: flex; border-bottom: 1px solid $border; flex-shrink: 0;
+}
+
+.ghpb-tab-btn {
+	flex: 1; padding: 10px 8px; border: none;
+	background: transparent; color: $text-dim; cursor: pointer;
+	font-size: 12px; border-bottom: 2px solid transparent;
+	transition: all .15s;
+
+	&.active { color: $purple; border-bottom-color: $purple; }
+	&:hover:not(.active) { color: $text; }
+}
+
+.ghpb-panel-sections { overflow-y: auto; flex: 1; }
+
+.ghpb-control-section {
+	border-bottom: 1px solid $border;
+}
+
+.ghpb-section-header {
+	display: flex; align-items: center; justify-content: space-between;
+	padding: 10px 16px; cursor: pointer;
+	&:hover { background: rgba(255,255,255,.03); }
+}
+
+.ghpb-section-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+
+.ghpb-section-arrow { font-size: 14px !important; transition: transform .2s; }
+
+.ghpb-control-section.ghpb-collapsed {
+	.ghpb-section-controls { display: none; }
+	.ghpb-section-arrow { transform: rotate(-90deg); }
+}
+
+.ghpb-section-controls { padding: 8px 16px 16px; }
+
+.ghpb-control {
+	margin-bottom: 12px;
+	&:last-child { margin-bottom: 0; }
+}
+
+.ghpb-control-label {
+	display: block; font-size: 11px; color: $text-dim;
+	margin-bottom: 4px; text-transform: capitalize;
+}
+
+.ghpb-input {
+	width: 100%; padding: 7px 10px;
+	background: $dark-3; border: 1px solid $border;
+	border-radius: 5px; color: $text; font-size: 13px; outline: none;
+	&:focus { border-color: $purple; }
+	&::placeholder { color: $text-dim; }
+}
+
+.ghpb-select {
+	width: 100%; padding: 7px 10px;
+	background: $dark-3; border: 1px solid $border;
+	border-radius: 5px; color: $text; font-size: 13px;
+}
+
+.ghpb-choose {
+	display: flex; gap: 4px;
+}
+
+.ghpb-choose-btn {
+	flex: 1; padding: 8px; border: 1px solid $border;
+	background: $dark-3; color: $text-dim; cursor: pointer;
+	border-radius: 5px; transition: all .15s;
+	display: flex; align-items: center; justify-content: center;
+
+	&.active { background: $purple; border-color: $purple; color: #fff; }
+	&:hover:not(.active) { border-color: $text-dim; color: $text; }
+}
+
+.ghpb-switcher {
+	display: flex; align-items: center;
+}
+
+.ghpb-switcher-label {
+	display: flex; align-items: center; cursor: pointer; gap: 8px;
+}
+
+.ghpb-switcher-input { display: none; }
+
+.ghpb-switcher-slider {
+	width: 36px; height: 20px; background: $dark-3;
+	border-radius: 10px; position: relative; transition: background .2s;
+	&::after {
+		content: ''; position: absolute; top: 2px; left: 2px;
+		width: 16px; height: 16px; border-radius: 50%;
+		background: $text-dim; transition: all .2s;
+	}
+}
+
+.ghpb-switcher-input:checked + .ghpb-switcher-slider {
+	background: $purple;
+	&::after { background: #fff; left: 18px; }
+}
+
+.ghpb-color-control { display: flex; align-items: center; gap: 8px; }
+
+.ghpb-color-preview {
+	width: 28px; height: 28px; border-radius: 4px;
+	border: 1px solid $border; flex-shrink: 0; cursor: pointer;
+}
+
+.ghpb-color-native { width: 0; height: 0; opacity: 0; pointer-events: none; position: absolute; }
+
+.ghpb-color-text { flex: 1; }
+
+.ghpb-slider-control { display: flex; align-items: center; gap: 8px; }
+
+.ghpb-slider {
+	flex: 1; accent-color: $purple; cursor: pointer;
+}
+
+.ghpb-slider-number { width: 60px; }
+.ghpb-slider-unit { width: 52px; padding: 7px 4px; }
+
+.ghpb-dimensions-inputs {
+	display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto;
+	gap: 6px; align-items: center; margin-bottom: 6px;
+}
+
+.ghpb-dim-field { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ghpb-dim-input { text-align: center; padding: 6px 4px; }
+.ghpb-dim-label { font-size: 10px; color: $text-dim; }
+
+.ghpb-dim-link {
+	width: 28px; height: 28px; border: 1px solid $border;
+	background: $dark-3; color: $text-dim; cursor: pointer; border-radius: 4px;
+	display: flex; align-items: center; justify-content: center;
+	&.active { border-color: $purple; color: $purple; }
+}
+
+.ghpb-dim-unit { width: 100%; padding: 6px 8px; }
+
+.ghpb-media-control { }
+.ghpb-media-preview img { width: 100%; border-radius: 5px; margin-bottom: 8px; }
+.ghpb-media-buttons { display: flex; gap: 8px; }
+
+.ghpb-btn {
+	padding: 6px 12px; border: 1px solid $border; border-radius: 5px;
+	background: $dark-3; color: $text; cursor: pointer; font-size: 12px;
+	&:hover { border-color: $purple; color: $purple; }
+}
+
+.ghpb-icon-control { display: flex; align-items: center; gap: 8px; }
+.ghpb-icon-preview { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: $dark-3; border-radius: 4px; }
+.ghpb-icon-input { flex: 1; }
+
+.ghpb-code-input { font-family: 'Consolas', 'Monaco', monospace; font-size: 12px; }
+
+.ghpb-control-desc { font-size: 11px; color: $text-dim; margin-top: 4px; }
+
+// ── Preview Area ──────────────────────────────────────────────────────────────
+.ghpb-preview-area {
+	flex: 1; background: #f0f0f0; display: flex;
+	align-items: center; justify-content: center;
+	overflow: hidden; position: relative;
+}
+
+.ghpb-preview-device-wrapper {
+	width: 100%; height: 100%; transition: width .3s, height .3s;
+	display: flex; align-items: center; justify-content: center;
+
+	&[data-device="tablet"] {
+		width: 1024px; height: 100%;
+	}
+	&[data-device="mobile"] {
+		width: 375px; height: 100%;
+	}
+}
+
+.ghpb-preview-frame {
+	width: 100%; height: 100%; border: none;
+	background: #fff;
+}
