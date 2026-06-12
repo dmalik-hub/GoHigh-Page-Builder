@@ -42,8 +42,8 @@ module.exports = [
 			jquery: 'jQuery',
 			underscore: '_',
 			backbone: 'Backbone',
-			'backbone.marionette': 'Marionette',
-			'backbone.radio': 'Backbone.Radio',
+			// Marionette + Backbone.Radio are NOT provided by WordPress, so we
+			// bundle them directly into editor.js rather than expecting globals.
 		},
 		devtool: isProduction ? false : 'source-map',
 	},

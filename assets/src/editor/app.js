@@ -55,7 +55,31 @@ const EditorApp = Marionette.Application.extend( {
 
 		} catch ( err ) {
 			console.error( '[GoHigh] Failed to load document:', err );
+			this._showLoadError( err );
 		}
+	},
+
+	_showLoadError( err ) {
+		const loading = document.getElementById( 'ghpb-loading-screen' );
+		if ( ! loading ) return;
+		const message = ( err && err.message ) ? err.message : 'Unknown error';
+		loading.innerHTML = `
+			<div style="text-align:center; max-width:480px; padding:32px;">
+				<div style="font-size:48px; margin-bottom:16px;">⚠️</div>
+				<h2 style="margin:0 0 12px; color:#fff;">Couldn't load the editor</h2>
+				<p style="color:#cdd6f4; margin:0 0 8px; font-size:14px;">${ message }</p>
+				<p style="color:#8890b0; font-size:13px; margin:16px 0;">
+					Open your browser's developer console (F12) and look at the
+					Console + Network tabs for more detail.
+				</p>
+				<a href="${ window.ghpbEditorConfig?.adminUrl || '/wp-admin/' }"
+				   style="display:inline-block; margin-top:16px; padding:8px 18px;
+				          background:#6c63ff; color:#fff; text-decoration:none;
+				          border-radius:6px; font-size:13px;">
+					Back to Dashboard
+				</a>
+			</div>
+		`;
 	},
 
 	// ── Panel ─────────────────────────────────────────────────────────────────

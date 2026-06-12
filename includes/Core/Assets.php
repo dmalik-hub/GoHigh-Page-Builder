@@ -26,27 +26,14 @@ class Assets {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style( 'dashicons' );
 
-		// Backbone + Marionette (bundled in node_modules, output to dist).
-		wp_enqueue_script(
-			'backbone-marionette',
-			GHPB_DIST_URL . 'js/vendor/backbone.marionette.min.js',
-			[ 'backbone', 'underscore', 'jquery' ],
-			'4.1.3',
-			true
-		);
-		wp_enqueue_script(
-			'backbone-radio',
-			GHPB_DIST_URL . 'js/vendor/backbone.radio.min.js',
-			[ 'backbone' ],
-			'2.0.0',
-			true
-		);
+		// Backbone is shipped by WordPress core. Marionette + Backbone.Radio
+		// are bundled directly into editor.js (see webpack.config.js externals).
 
 		// Editor bundle.
 		wp_enqueue_script(
 			'ghpb-editor',
 			GHPB_DIST_URL . 'js/editor.js',
-			[ 'jquery', 'backbone', 'underscore', 'backbone-marionette', 'backbone-radio',
+			[ 'jquery', 'backbone', 'underscore',
 			  'jquery-ui-sortable', 'jquery-ui-draggable', 'jquery-ui-droppable',
 			  'jquery-ui-resizable', 'wp-api-fetch', 'wp-hooks' ],
 			GHPB_VERSION,
