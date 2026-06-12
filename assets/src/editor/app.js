@@ -252,16 +252,38 @@ const EditorApp = Marionette.Application.extend( {
 	// ── Preview refresh ───────────────────────────────────────────────────────
 
 	_reloadPreview() {
-		// Full reload of the iframe with new data.
-		// We save draft first, then reload the iframe.
+		// Save the document to _gohigh_data (NOT _gohigh_draft) so the
+		// iframe reads the new state on reload. Autosave wrote to a separate
+		// meta key the preview never saw — that's why the canvas appeared blank.
 		const elements     = this.document.get( 'elements' );
 		const pageSettings = this.document.get( 'page_settings' );
 
-		api.autosave( this.postId, elements, pageSettings ).then( () => {
-			if ( this.previewFrame ) {
-				this.previewFrame.contentWindow.location.reload();
-			}
-		} );
+		this._showStatus( 'saving' );
+
+		api.saveDocument( this.postId, elements, pageSettings, this.document.get( 'status' ) || 'publish' )
+			.then( () => {
+				this._showStatus( 'saved' );
+				if ( this.previewFrame ) {
+					this.previewFrame.contentWindow.location.reload();
+				}
+			} )
+			.catch( err => {
+				console.error( '[GoHigh] Save failed:', err );
+				this._showStatus( 'error', err.message );
+				alert( 'GoHigh save failed: ' + ( err.message || 'Unknown error' ) + '\n\nOpen the browser console (F12) for full detail.' );
+			} );
+	},
+
+	_showStatus( state, message ) {
+		const saveBtn = document.getElementById( 'ghpb-save-btn' );
+		if ( ! saveBtn ) return;
+		const span = saveBtn.querySelector( 'span' );
+		if ( ! span ) return;
+		switch ( state ) {
+			case 'saving': span.textContent = this.i18n.saving || 'Saving…'; break;
+			case 'saved':  span.textContent = this.i18n.saved  || 'Saved'; setTimeout( () => { span.textContent = this.i18n.save || 'Update'; }, 1200 ); break;
+			case 'error':  span.textContent = 'Error!'; break;
+		}
 	},
 
 	// ── Toolbar ───────────────────────────────────────────────────────────────

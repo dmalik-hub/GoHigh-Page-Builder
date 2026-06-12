@@ -42,6 +42,6 @@ class Capabilities {
 	}
 
 	private function get_editor_url( int $post_id ): string {
-		return admin_url( 'admin.php?page=gohigh-editor&post=' . $post_id );
+		return admin_url( 'admin.php?action=gohigh_editor&post=' . $post_id );
 	}
 }

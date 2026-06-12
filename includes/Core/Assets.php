@@ -11,11 +11,14 @@ class Assets {
 	}
 
 	public function enqueue_editor_assets(): void {
-		$screen = get_current_screen();
-		if ( ! $screen || 'admin_page_gohigh-editor' !== $screen->id ) {
-			return;
-		}
+		// Legacy entry point kept in case some flow still hits admin_enqueue_scripts.
+		// The full-screen editor calls do_enqueue_editor_assets() directly.
+	}
 
+	/**
+	 * Enqueues all editor assets for a given post. Safe to call outside any screen context.
+	 */
+	public function do_enqueue_editor_assets( int $post_id ): void {
 		// WordPress core scripts needed in editor.
 		wp_enqueue_media();
 		wp_enqueue_script( 'jquery-ui-sortable' );
@@ -46,8 +49,7 @@ class Assets {
 			GHPB_VERSION
 		);
 
-		$post_id = absint( $_GET['post'] ?? 0 );
-		$post    = $post_id ? get_post( $post_id ) : null;
+		$post = get_post( $post_id );
 
 		// Localise editor data.
 		wp_localize_script( 'ghpb-editor', 'ghpbEditorConfig', [
@@ -58,7 +60,7 @@ class Assets {
 			'restUrl'       => rest_url( 'gohigh/v1/' ),
 			'homeUrl'       => home_url(),
 			'adminUrl'      => admin_url(),
-			'previewUrl'    => add_query_arg( [ 'ghpb-preview' => '1', 'post' => $post_id ], home_url() ),
+			'previewUrl'    => add_query_arg( [ 'ghpb-preview' => '1', 'post' => $post_id, 'nonce' => wp_create_nonce( 'ghpb_preview' ) ], home_url() ),
 			'widgetTypes'   => $this->get_widget_types_config(),
 			'breakpoints'   => [
 				'desktop' => 99999,

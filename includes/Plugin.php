@@ -60,8 +60,10 @@ final class Plugin {
 
 	private function register_hooks(): void {
 		add_action( 'init', [ $this, 'on_init' ] );
-		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
 		add_filter( 'template_include', [ $this->frontend, 'template_include' ] );
+		// Custom admin action — fires VERY early in admin.php, before any admin
+		// chrome is rendered. We render our editor template and exit, which
+		// gives us a full-screen editor like Elementor (no WP sidebar/topbar).
 		add_action( 'admin_action_gohigh_editor', [ $this, 'editor_action' ] );
 	}
 
@@ -100,18 +102,10 @@ final class Plugin {
 		}
 	}
 
-	public function admin_menu(): void {
-		// Adds hidden admin page for the full-screen editor.
-		add_submenu_page(
-			null,
-			__( 'GoHigh Page Builder Editor', 'gohigh-page-builder' ),
-			'',
-			'edit_posts',
-			'gohigh-editor',
-			[ $this, 'render_editor_page' ]
-		);
-	}
-
+	/**
+	 * Renders the full-screen editor directly, bypassing all admin chrome.
+	 * Hooked to admin_action_gohigh_editor which fires before WP loads sidebar/topbar.
+	 */
 	public function editor_action(): void {
 		$post_id = absint( $_GET['post'] ?? 0 );
 		if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
@@ -120,16 +114,16 @@ final class Plugin {
 
 		update_post_meta( $post_id, '_gohigh_edit_mode', 'builder' );
 
-		wp_redirect( admin_url( 'admin.php?page=gohigh-editor&post=' . $post_id ) );
-		exit;
-	}
+		// Set up the post context so wp_head() / templates see the right post.
+		global $post;
+		$post = get_post( $post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride
+		setup_postdata( $post );
 
-	public function render_editor_page(): void {
-		$post_id = absint( $_GET['post'] ?? 0 );
-		if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
-			wp_die( esc_html__( 'Access denied.', 'gohigh-page-builder' ) );
-		}
+		// Manually enqueue editor assets (no screen context here).
+		$this->assets->do_enqueue_editor_assets( $post_id );
+
 		require GHPB_PATH . 'templates/editor-wrapper.php';
+		exit;
 	}
 
 	public static function activate(): void {

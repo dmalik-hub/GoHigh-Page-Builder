@@ -29,9 +29,12 @@ $preview_url = add_query_arg( [
 	<title><?php echo esc_html( $post->post_title ); ?> — <?php esc_html_e( 'GoHigh Editor', 'gohigh-page-builder' ); ?></title>
 	<?php wp_head(); ?>
 	<style>
-		html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #1e1e2e; }
-		#wpwrap, #wpcontent, #wpbody, #wpbody-content { height: 100%; }
-		#wpadminbar { display: none; }
+		/* Hide every fragment of WP admin chrome that might leak in. */
+		html.wp-toolbar { padding-top: 0 !important; }
+		html, body { margin: 0 !important; padding: 0 !important; height: 100% !important; overflow: hidden !important; background: #1e1e2e !important; }
+		#wpadminbar, #adminmenumain, #adminmenuwrap, #adminmenuback, #wpfooter { display: none !important; }
+		#wpwrap, #wpcontent, #wpbody, #wpbody-content { margin: 0 !important; padding: 0 !important; height: 100% !important; float: none !important; width: 100% !important; }
+		.notice, .updated, .error, .update-nag, .wrap > h1 { display: none !important; }
 		.ghpb-editor-loading {
 			position: fixed; inset: 0; z-index: 99999;
 			display: flex; align-items: center; justify-content: center;
